@@ -35,13 +35,13 @@ C_STATIC_FORCE_INLINE os_list_t* os_timewheel__find_slot(os_tick_t tick){
     if(tick < TWR_SIZE){
         return &os_timewheel__root_list[tick];
     }else if(tick <= TWN_MAX(1)){
-        return &os_timewheel__n_list[1][TWN_IDX(tick, 0)];
+        return &os_timewheel__n_list[0][TWN_IDX(tick, 0)];
     }else if(tick <= TWN_MAX(2)){
-        return &os_timewheel__n_list[2][TWN_IDX(tick, 1)];
+        return &os_timewheel__n_list[1][TWN_IDX(tick, 1)];
     }else if(tick <= TWN_MAX(3)){
-        return &os_timewheel__n_list[3][TWN_IDX(tick, 2)];
+        return &os_timewheel__n_list[2][TWN_IDX(tick, 2)];
     }else if(tick <= 0xFFFFFFFFu){
-        return &os_timewheel__n_list[4][TWN_IDX(tick, 3)];
+        return &os_timewheel__n_list[3][TWN_IDX(tick, 3)];
     }
     return 0;
 }
