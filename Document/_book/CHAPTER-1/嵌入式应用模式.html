@@ -1,0 +1,429 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>嵌入式应用模式 · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 5.1.4">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="./" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    嵌入式系统由来
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.2.1" data-path="嵌入式应用模式.html">
+            
+                <a href="嵌入式应用模式.html">
+            
+                    
+                    嵌入式应用模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >嵌入式应用模式</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="嵌入式应用模式">嵌入式应用模式</h1>
+<p>常见的嵌入式应用有2种：</p>
+<ol>
+<li><p>前后台系统</p>
+<p>前后台系统由前台、后台两部分构成。前台是中断处理程序，后台是一个大循环，大致的结构如下：</p>
+<pre><code class="lang-c"><span class="hljs-type">int</span> event_flag1=<span class="hljs-number">0</span>;
+<span class="hljs-type">int</span> event_flag2=<span class="hljs-number">0</span>;
+<span class="hljs-type">int</span> event_flag3=<span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">extern</span> <span class="hljs-type">void</span> <span class="hljs-title function_">HandleEvent1</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;
+<span class="hljs-keyword">extern</span> <span class="hljs-type">void</span> <span class="hljs-title function_">HandleEvent2</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;
+<span class="hljs-keyword">extern</span> <span class="hljs-type">void</span> <span class="hljs-title function_">HandleEvent3</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>{
+    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>){
+        <span class="hljs-keyword">if</span>(event_flag1){
+            HandleEvent1();
+        }
+        <span class="hljs-keyword">if</span>(event_flag2){
+            HandleEvent2();
+        }
+        <span class="hljs-keyword">if</span>(event_flag3){
+            HandleEvent3();
+        }
+    }
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">IRQ1_Handler</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>{
+    event_flag1 = <span class="hljs-number">1</span>;
+    SimpleEvent1Process();
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">IRQ2_Handler</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>{
+    event_flag2 = <span class="hljs-number">1</span>;
+    SimpleEvent2Process();
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">IRQ3_Handler</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>{
+    event_flag3 = <span class="hljs-number">1</span>;
+}
+</code></pre>
+<ul>
+<li>前台程序（中端处理程序）的优先级比后台程序（大循环）的优先级高，当发生中断时，会停止大循环的执行，切换到中断对应的处理程序中。如果中断中只需要简单的设置一下标志位，如<code>event_flag1=1;</code>，或者记录一下事件发生的次数，如<code>event_count1++;</code>可以直接在中断处理程序中完成，但是如果处理过程比较复杂，占用CPU时间比较长，就需要尽快退出中断程序，在后台程序中进行处理；如果不及时退出，中断发生频率很高的情况下，会导致错过中断事件的情况；</li>
+</ul>
+<p>【优点】</p>
+<ul>
+<li>应用结构简单，对于逻辑简单的应用开发起来非常容易入手</li>
+</ul>
+<p>【缺点】</p>
+<ul>
+<li>应用逻辑复杂时，需要小心设计和处理</li>
+<li>需要在后台程序中进行多个条件判断，实时性不够，对实时性要求高的应用不太合适</li>
+</ul>
+</li>
+</ol>
+<ol>
+<li>实时多任务系统</li>
+</ol>
+<p>​    复杂的应用系统中，可以运行多个不同的任务：</p>
+<ol>
+<li>每个任务就像一个工人，专职负责一个任务；</li>
+<li>当任务相关的事件没有发生时，任务可以休息，不会占用系统资源；</li>
+<li>当任务相关的事件发生时，任务被唤醒，并继续执行；</li>
+<li>任务可以按重要程度划分优先级，A任务执行时，收到了B任务的事件，因为B事件更重要，需要马上处理，这时就需要先暂停A任务的执行，切换到B任务，当B任务完成后再回到A任务继续执行</li>
+</ol>
+<p>实时多任务系统的结构如下:</p>
+<pre><code class="lang-c"><span class="hljs-type">int</span> event_flag1 = <span class="hljs-number">0</span>;
+<span class="hljs-type">int</span> event_flag2 = <span class="hljs-number">0</span>;
+<span class="hljs-type">int</span> event_flag3 = <span class="hljs-number">0</span>;
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>{
+    Hardware_Init();
+    RTOS_Init();
+    Task1_Init();
+    Task2_Init();
+    Task3_Init();
+    RTOS_Startup();
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">IRQ1_Handler</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>{
+    event_flag1=<span class="hljs-number">1</span>;
+    RTOS_Notify(<span class="hljs-number">1</span>);
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">IRQ2_Handler</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>{
+    event_flag2=<span class="hljs-number">1</span>;
+    RTOS_Notify(<span class="hljs-number">2</span>);
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">IRQ3_Handler</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>{
+    event_flag3=<span class="hljs-number">1</span>;
+    RTOS_Notify(<span class="hljs-number">3</span>);
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">Task1</span><span class="hljs-params">(<span class="hljs-type">void</span>* param)</span>{
+    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>){
+        RTOS_Wait(<span class="hljs-number">1</span>); <span class="hljs-comment">/* Task1 will wait until RTOS_Notify(1) called */</span>
+        <span class="hljs-keyword">if</span>(event_flag1){
+            Handle_Event1();
+        }
+    }
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">Task2</span><span class="hljs-params">(<span class="hljs-type">void</span>* param)</span>{
+    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>){
+        RTOS_Wait(<span class="hljs-number">2</span>); <span class="hljs-comment">/* Task2 will wait until RTOS_Notify(2) called */</span>
+        <span class="hljs-keyword">if</span>(event_flag2){
+            Handle_Event2();
+        }
+    }
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">Task3</span><span class="hljs-params">(<span class="hljs-type">void</span>* param)</span>{
+    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>){
+        RTOS_Wait(<span class="hljs-number">3</span>); <span class="hljs-comment">/* Task3 will wait until RTOS_Notify(3) called */</span>
+        <span class="hljs-keyword">if</span>(event_flag3){
+            Handle_Event3();
+        }
+    }
+}
+</code></pre>
+<p>【优点】</p>
+<ol>
+<li>实时性高，按事件重要程度响应，事件发生时立即调用对应的任务执行</li>
+<li>将系统功能划分为多个小任务，提升了系统的重用性，更容易测试，更好维护</li>
+<li>系统资源利用更合理，能将CPU执行时间划分为不同的小片段，想通优先级的任务，按时间片段轮流执行</li>
+</ol>
+<p>【缺点】</p>
+<ol>
+<li>实时系统需要占用额外的CPU资源和内存、ROM等资源（最小系统在<code>5k-10k</code>左右）</li>
+</ol>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./" class="navigation navigation-prev navigation-unique" aria-label="Previous page: 嵌入式系统由来">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"嵌入式应用模式","level":"1.2.1","depth":2,"previous":{"title":"嵌入式系统由来","level":"1.2","depth":1,"path":"CHAPTER-1/README.md","ref":"CHAPTER-1/README.md","articles":[{"title":"嵌入式应用模式","level":"1.2.1","depth":2,"path":"CHAPTER-1/嵌入式应用模式.md","ref":"CHAPTER-1/嵌入式应用模式.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"CHAPTER-1/嵌入式应用模式.md","mtime":"2024-09-23T14:11:32.488Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-09-23T14:11:51.333Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
