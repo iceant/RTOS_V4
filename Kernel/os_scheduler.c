@@ -10,11 +10,11 @@
 /* EXTERNAL  */
 
 volatile os_thread_t * os_scheduler_current_thread_p;
-
+volatile os_tick_t     os_scheduler__systick_tick;
 /* -------------------------------------------------------------------------------------------------------------- */
 /* STATIC */
 static os_thread_t *    os_scheduler__highest_thread_p;
-static os_tick_t        os_scheduler__systick_tick;
+
 static os_size_t        os_scheduler__lock_nesting;
 static os_int_t         os_scheduler__schedule_flag;
 static os_list_t        os_scheduler__wait_list;

@@ -12,6 +12,10 @@
 #include <os_waitobject.h>
 #endif /*INCLUDED_OS_WAITOBJECT_H*/
 
+#ifndef INCLUDED_CPU_SPINLOCK_H
+#include <cpu_spinlock.h>
+#endif /*INCLUDED_CPU_SPINLOCK_H*/
+
 
 /* -------------------------------------------------------------------------------------------------------------- */
 /* TYPES */

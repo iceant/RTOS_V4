@@ -90,4 +90,8 @@ int sdk_ringbuffer_find_str(sdk_ringbuffer_t * buf, sdk_size_t from_idx, const c
 
 sdk_err_t sdk_ringbuffer_cut(sdk_ringbuffer_t* buf, sdk_size_t from_idx, const char* prefix, const char* postfix, sdk_ringbuffer_pos_t* pos);
 
+void sdk_ringbuffer_dump(sdk_ringbuffer_t * buf, const char* name, void (*put)(char*, ...));
+
+sdk_bool_t sdk_ringbuffer_is(sdk_ringbuffer_t * buf, sdk_size_t idx, uint8_t data);
+
 #endif /* INCLUDED_SDK_RINGBUFFER_H */

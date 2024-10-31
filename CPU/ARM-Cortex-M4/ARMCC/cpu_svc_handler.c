@@ -20,14 +20,15 @@ __asm void SVC_Handler(void){
         LDR R1, =svc_exc_return
         LDR LR, [R1]
         BX LR
-        ALIGN 4
-   
+
+    ALIGN 4
 }
 
 void SVC_Handler_C(cpu_uint_t* svc_args){
     uint8_t svc_number;
+    cpu_svc_function_t fn;
     svc_number = ((char*)svc_args[6])[-2];
-    cpu_svc_function_t fn = cpu_svc_get_function(svc_number);
+    fn = cpu_svc_get_function(svc_number);
     if(fn){
         fn(svc_args, (void*)&svc_args[0]);
     }

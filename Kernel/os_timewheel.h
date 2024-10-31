@@ -26,4 +26,6 @@ os_err_t os_timewheel_add_timer(os_timer_t* timer, os_timer_function_t fn, void*
 
 os_err_t os_timewheel_tick(void);
 
+os_tick_t os_timewheel_get_tick(void);
+
 #endif /* INCLUDED_OS_TIMEWHEEL_H */

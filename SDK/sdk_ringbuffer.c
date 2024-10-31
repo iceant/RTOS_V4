@@ -123,6 +123,10 @@ uint8_t sdk_ringbuffer_get(sdk_ringbuffer_t* buf, sdk_size_t idx){
     return buf->buffer[idx];
 }
 
+sdk_bool_t sdk_ringbuffer_is(sdk_ringbuffer_t * buf, sdk_size_t idx, uint8_t data){
+    return (sdk_ringbuffer_get(buf, idx)==data)?SDK_TRUE:SDK_FALSE;
+}
+
 /* 从 idx (idx < used) 位置开始将数据转换为 unsigned long, 结束位置存入 endptr 中*/
 unsigned long sdk_ringbuffer_strtoul(sdk_ringbuffer_t* buf, sdk_size_t idx, sdk_size_t * endptr, int base)
 {
@@ -246,4 +250,42 @@ sdk_err_t sdk_ringbuffer_cut(sdk_ringbuffer_t* buf, sdk_size_t from_idx
     }
     
     return SDK_ERR_OK;
+}
+
+void sdk_ringbuffer_dump(sdk_ringbuffer_t * buf, const char* name, void (*put)(char*, ...)){
+    char ascii[17];
+    size_t i, j;
+    size_t size = sdk_ringbuffer_used(buf);
+    ascii[16] = '\0';
+    uint8_t ch;
+
+    if(name){
+        put("-- DUMP: %s(%u) --\n", name, size);
+    }
+
+
+    for (i = 0; i < size; ++i) {
+        sdk_ringbuffer_peek(buf, i, &ch);
+        put("%02X ", ch);
+        if (ch >= ' ' && ch <= '~') {
+            ascii[i % 16] = ch;
+        } else {
+            ascii[i % 16] = '.';
+        }
+        if ((i+1) % 8 == 0 || i+1 == size) {
+            put(" ");
+            if ((i+1) % 16 == 0) {
+                put("|  %s \n", ascii);
+            } else if (i+1 == size) {
+                ascii[(i+1) % 16] = '\0';
+                if ((i+1) % 16 <= 8) {
+                    put(" ");
+                }
+                for (j = (i+1) % 16; j < 16; ++j) {
+                    put("   ");
+                }
+                put("|  %s \n", ascii);
+            }
+        }
+    }
 }

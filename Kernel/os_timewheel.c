@@ -114,3 +114,8 @@ os_err_t os_timewheel_tick(void){
     
     return err;
 }
+
+os_tick_t os_timewheel_get_tick(void){
+    return os_timewheel__tick;
+}
+
