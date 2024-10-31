@@ -41,4 +41,6 @@ os_err_t os_service_notify(os_waitobject_t * wait_object);
 
 os_err_t os_service_notify_all(os_waitobject_t * wait_object);
 
+os_err_t os_service_force_schedule(void);
+
 #endif /* INCLUDED_OS_SERVICE_H */

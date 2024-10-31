@@ -2,6 +2,7 @@
 #include <os_lock.h>
 #include <os_scheduler.h>
 #include <os_readylist.h>
+#include <stdio.h>
 /* -------------------------------------------------------------------------------------------------------------- */
 /* STATIC */
 C_STATIC_FORCE_INLINE void os_waitobject_push_back(os_waitobject_t* object, os_thread_t* thread){
@@ -75,12 +76,12 @@ os_err_t os_waitobject_wait(os_waitobject_t * object, os_thread_t *thread, os_ti
     }else {
         os_scheduler_delay_no_schedule(thread, wait_ticks);
         os_lock_unlock(&lock);
-        os_scheduler_schedule();
+        os_err_t err = os_scheduler_schedule();/*在 SVC 中时，调度不会发生，造成直接执行了下面的语句*/
         if(thread->error==OS_ERR_TIMEOUT){
             thread->error = OS_ERR_OK; /* 超时了还没被唤醒 */
             return OS_ERR_TIMEOUT;
         }
-        return OS_ERR_OK; /*超时之前被唤醒了*/
+        return err; /*超时之前被唤醒了*/
     }
 }
 
