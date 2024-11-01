@@ -243,20 +243,19 @@ os_err_t os_scheduler_force_schedule(void){
     }
     
     if(os_scheduler_current_thread_p){
-//        if(os_scheduler_current_thread_p->state==OS_THREAD_STATE_RUNNING){
-//            if(os_priority_cmp(os_scheduler_current_thread_p->current_priority
-//                    , os_scheduler__highest_thread_p->current_priority)!=OS_PRIORITY_CMP_LOW){
-//                /* 当前任务优先级不低于要调度的任务，具有继续执行的权利 */
-//                os_readylist_push_front(os_scheduler__highest_thread_p);
-//                os_scheduler__schedule_flag = OS_SCHEDULER_FLAG_NONE;
-//                OS_SCHEDULER_LOCK_UNLOCK();
-//                return OS_SCHEDULER_ERR_CURRENT_THREAD_RUNNING;
-//            }else{
-//                /*抢占*/
-//                os_readylist_push_back((os_thread_t*)os_scheduler_current_thread_p);
-//            }
-//        }
-        os_readylist_push_back((os_thread_t*)os_scheduler_current_thread_p);
+        if(os_scheduler_current_thread_p->state==OS_THREAD_STATE_RUNNING){
+            if(os_priority_cmp(os_scheduler_current_thread_p->current_priority
+                    , os_scheduler__highest_thread_p->current_priority)!=OS_PRIORITY_CMP_LOW){
+                /* 当前任务优先级不低于要调度的任务，具有继续执行的权利 */
+                os_readylist_push_front(os_scheduler__highest_thread_p);
+                os_scheduler__schedule_flag = OS_SCHEDULER_FLAG_NONE;
+                OS_SCHEDULER_LOCK_UNLOCK();
+                return OS_SCHEDULER_ERR_CURRENT_THREAD_RUNNING;
+            }else{
+                /*抢占*/
+                os_readylist_push_back((os_thread_t*)os_scheduler_current_thread_p);
+            }
+        }
     }
     
     /*Unlock, IMPORTANT!!!*/
@@ -348,7 +347,7 @@ os_err_t os_scheduler_delay(os_thread_t* thread, os_tick_t ticks){
 
 os_err_t os_scheduler_delay_no_schedule(os_thread_t* thread, os_tick_t ticks){
     os_timewheel_add_timer(&thread->timer, os_scheduler__timeout, thread, ticks, OS_TIMER_FLAG_ONCE);
-    thread->error = OS_ERR_OK;
+//    thread->error = OS_ERR_OK;
     thread->state = OS_THREAD_STATE_DELAY;
     return OS_ERR_OK;
 }

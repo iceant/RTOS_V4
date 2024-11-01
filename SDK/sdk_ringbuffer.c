@@ -45,8 +45,12 @@ sdk_err_t sdk_ringbuffer_write(sdk_ringbuffer_t* buf, uint8_t* data, sdk_size_t 
     if(space < size){
         return SDK_ERR_NOMEM;
     }
+    sdk_err_t err;
     for(sdk_size_t i=0; i<size; i++){
-        sdk_ringbuffer_put(buf, *data++);
+        err = sdk_ringbuffer_put(buf, *data++);
+        if(err!=SDK_ERR_OK){
+            return err;
+        }
     }
     return SDK_ERR_OK;
 }

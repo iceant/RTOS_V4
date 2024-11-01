@@ -29,7 +29,9 @@ os_err_t os_sem_take(os_sem_t * sem, os_tick_t wait_for_ticks){
             return OS_ERR_OK;
         }
         wait_error = os_service_wait(&sem->wait_object, os_thread_self(), wait_for_ticks);
-    } while (wait_error!=OS_ERR_OK && wait_error!=OS_ERR_TIMEOUT);
+//        if(wait_error!=OS_SCHEDULER_ERR_CURRENT_THREAD_RUNNING)
+//            printf("[os_sem] %s take return %X\n", os_thread_self()->name,  wait_error);
+    } while (wait_error!=OS_ERR_TIMEOUT);
     
     return wait_error;
 }
@@ -37,8 +39,8 @@ os_err_t os_sem_take(os_sem_t * sem, os_tick_t wait_for_ticks){
 os_err_t os_sem_release(os_sem_t* sem){
     sem->value++;
     os_err_t err = os_service_notify(&sem->wait_object);
-//    printf("[os_sem] release err=%d, thd:%s\n", err, os_thread_self()->name);
-    if(err!=OS_ERR_OK){
+//    printf("[os_sem] release err=%X, thd:%s, ipsr:%d\n", err, os_thread_self()->name, cpu_get_ipsr());
+    if(err==OS_SCHEDULER_ERR_INT_NEST){
         os_scheduler_set_need_schedule(1);
     }
     return err;

@@ -2,8 +2,6 @@
 #include <os_lock.h>
 #include <os_scheduler.h>
 #include <os_readylist.h>
-#include <stdio.h>
-#include "os_service.h"
 #include "os_timewheel.h"
 /* -------------------------------------------------------------------------------------------------------------- */
 /* STATIC */
@@ -76,19 +74,28 @@ os_err_t os_waitobject_wait(os_waitobject_t * object, os_thread_t *thread, os_ti
     }else if(wait_ticks==OS_WAIT_FOREVER){
         OS_LIST_REMOVE(&thread->pend_node);
         OS_LIST_INSERT_BEFORE(&object->wait_list, &thread->pend_node);
+        thread->state = OS_THREAD_STATE_PEND;
         os_lock_unlock(&lock);
         return os_scheduler_schedule();
     }else {
-        os_scheduler_delay_no_schedule(thread, wait_ticks);
+        if(thread->error==OS_ERR_TIMEOUT){
+            thread->error = OS_ERR_OK; /* 超时了还没被唤醒 */
+            os_lock_unlock(&lock);
+            return OS_ERR_TIMEOUT;
+        }
+        
         OS_LIST_REMOVE(&thread->pend_node);
         OS_LIST_INSERT_BEFORE(&object->wait_list, &thread->pend_node);
+        os_scheduler_delay_no_schedule(thread, wait_ticks);
         os_lock_unlock(&lock);
-        os_scheduler_schedule();
+        
+        os_err_t err = os_scheduler_schedule();
+        
         if(thread->error==OS_ERR_TIMEOUT){
             thread->error = OS_ERR_OK; /* 超时了还没被唤醒 */
             return OS_ERR_TIMEOUT;
         }
-        return OS_ERR_OK; /*超时之前被唤醒了*/
+        return err; /*超时之前被唤醒了*/
     }
 }
 
@@ -98,6 +105,7 @@ os_err_t os_waitobject_notify_one(os_waitobject_t* object){
     os_lock_lock(&lock);
     os_waitobject_pop_one(object);
     os_lock_unlock(&lock);
+//    printf("[os_waitobject] schedule from %s\n", os_thread_self()->name);
     return os_scheduler_schedule();
 }
 
