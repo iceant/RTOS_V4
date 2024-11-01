@@ -50,6 +50,9 @@ int os_service__svc__scheduler_method(cpu_uint_t * args, void* result){
             os_waitobject_t * wait_object_p =  (os_waitobject_t*)args[1];
             *(cpu_uint_t*)result = os_waitobject_notify_all(wait_object_p);
             break;
+        }case 8:{
+            *(cpu_uint_t*)result = os_scheduler_force_schedule();
+            break;
         }
         default:{
             break;
@@ -65,6 +68,14 @@ int os_service__svc__scheduler_method(cpu_uint_t * args, void* result){
 
 void os_service_init(void){
     cpu_svc_register_function(1, os_service__svc__scheduler_method);
+}
+
+os_err_t os_service_force_schedule(void){
+    if(cpu_in_privilege()){
+        return os_scheduler_force_schedule();
+    }else{
+        cpu_svc_call1(1, 8);
+    }
 }
 
 os_err_t os_service_schedule(void){

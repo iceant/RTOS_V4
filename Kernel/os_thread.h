@@ -56,7 +56,7 @@ typedef struct os_thread_s {
     os_timer_t timer;
     int state;
     int flag;
-    os_err_t error;
+    volatile os_err_t error;
 }os_thread_t;
 
 typedef void (*os_thread_entry_t)(void* p);

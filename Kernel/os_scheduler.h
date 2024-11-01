@@ -70,4 +70,8 @@ os_err_t os_scheduler_delay_no_schedule(os_thread_t* thread, os_tick_t ticks);
 
 os_err_t  os_scheduler_yield(os_thread_t* thread);
 
+os_err_t os_scheduler_force_to(os_thread_t* thread);
+
+os_err_t os_scheduler_force_schedule(void);
+
 #endif /* INCLUDED_OS_SCHEDULER_H */
