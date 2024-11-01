@@ -28,4 +28,6 @@ os_err_t os_timewheel_tick(void);
 
 os_tick_t os_timewheel_get_tick(void);
 
+void os_timewheel_remove_timer(os_timer_t * timer);
+
 #endif /* INCLUDED_OS_TIMEWHEEL_H */

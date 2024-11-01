@@ -30,8 +30,8 @@ void os_priority_mark(os_priority_t priority);
 void os_priority_unmark(os_priority_t priority);
 
 C_STATIC_FORCE_INLINE int os_priority_cmp(os_priority_t a, os_priority_t b){
-    if(a==b) return 0;
-    return a>b?-1:1;
+    if(a==b) return OS_PRIORITY_CMP_EQ;
+    return (a>b)?OS_PRIORITY_CMP_LOW:OS_PRIORITY_CMP_HIGH;
 }
 
 #endif /* INCLUDED_OS_PRIORITY_H */

@@ -2,6 +2,9 @@
 #include <os_lock.h>
 #include <os_scheduler.h>
 #include <os_readylist.h>
+#include <stdio.h>
+#include "os_service.h"
+#include "os_timewheel.h"
 /* -------------------------------------------------------------------------------------------------------------- */
 /* STATIC */
 C_STATIC_FORCE_INLINE void os_waitobject_push_back(os_waitobject_t* object, os_thread_t* thread){
@@ -33,6 +36,8 @@ C_STATIC_FORCE_INLINE void os_waitobject_pop_one(os_waitobject_t* object) {
     }
     node = OS_LIST_NEXT(&object->wait_list);
     os_thread_t *thread = OS_LIST_CONTAINER(node, os_thread_t, pend_node);
+    OS_LIST_REMOVE(&thread->pend_node);
+    os_timewheel_remove_timer(&thread->timer);
     os_readylist_push_back(thread);
 }
 
@@ -46,6 +51,7 @@ C_STATIC_FORCE_INLINE void os_waitobject_pop_all(os_waitobject_t* object){
         thread = OS_LIST_CONTAINER(node, os_thread_t, pend_node);
         node = OS_LIST_NEXT(node);
         OS_LIST_REMOVE(&thread->pend_node);
+        os_timewheel_remove_timer(&thread->timer);
         os_readylist_push_back(thread);
     }
 }
@@ -74,6 +80,8 @@ os_err_t os_waitobject_wait(os_waitobject_t * object, os_thread_t *thread, os_ti
         return os_scheduler_schedule();
     }else {
         os_scheduler_delay_no_schedule(thread, wait_ticks);
+        OS_LIST_REMOVE(&thread->pend_node);
+        OS_LIST_INSERT_BEFORE(&object->wait_list, &thread->pend_node);
         os_lock_unlock(&lock);
         os_scheduler_schedule();
         if(thread->error==OS_ERR_TIMEOUT){

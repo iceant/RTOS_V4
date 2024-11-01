@@ -4,6 +4,7 @@
 #include <os_macros.h>
 #include <os_service.h>
 #include <os_scheduler.h>
+#include <stdio.h>
 /* -------------------------------------------------------------------------------------------------------------- */
 /* METHODS */
 
@@ -34,10 +35,9 @@ os_err_t os_sem_take(os_sem_t * sem, os_tick_t wait_for_ticks){
 }
 
 os_err_t os_sem_release(os_sem_t* sem){
-//    cpu_spinlock_lock(&sem->lock); /* lock used in IRQ will cause deadlock */
     sem->value++;
-//    cpu_spinlock_unlock(&sem->lock);
     os_err_t err = os_service_notify(&sem->wait_object);
+//    printf("[os_sem] release err=%d, thd:%s\n", err, os_thread_self()->name);
     if(err!=OS_ERR_OK){
         os_scheduler_set_need_schedule(1);
     }

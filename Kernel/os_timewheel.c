@@ -119,3 +119,7 @@ os_tick_t os_timewheel_get_tick(void){
     return os_timewheel__tick;
 }
 
+void os_timewheel_remove_timer(os_timer_t * timer){
+    OS_LIST_REMOVE(&timer->wait_node);
+}
+

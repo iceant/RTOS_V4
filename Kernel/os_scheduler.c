@@ -6,6 +6,7 @@
 #include <os_timewheel.h>
 #include <cpu.h>
 #include <os_service.h>
+#include <stdio.h>
 /* -------------------------------------------------------------------------------------------------------------- */
 /* EXTERNAL  */
 
