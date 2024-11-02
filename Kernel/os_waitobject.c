@@ -10,7 +10,8 @@ C_STATIC_FORCE_INLINE void os_waitobject_push_back(os_waitobject_t* object, os_t
     os_thread_t * thread_p;
     
     OS_LIST_REMOVE(&thread->pend_node);
-    
+    thread->state = OS_THREAD_STATE_PEND;
+
     if(object->flag==OS_WAIT_FLAG_PRIO){
         for(node = OS_LIST_NEXT(&object->wait_list); node!=&object->wait_list; ){
             thread_p = OS_LIST_CONTAINER(node, os_thread_t, pend_node);
@@ -72,9 +73,7 @@ os_err_t os_waitobject_wait(os_waitobject_t * object, os_thread_t *thread, os_ti
         os_lock_unlock(&lock);
         return OS_ERR_TIMEOUT;
     }else if(wait_ticks==OS_WAIT_FOREVER){
-        OS_LIST_REMOVE(&thread->pend_node);
-        OS_LIST_INSERT_BEFORE(&object->wait_list, &thread->pend_node);
-        thread->state = OS_THREAD_STATE_PEND;
+        os_waitobject_push_back(object, thread);
         os_lock_unlock(&lock);
         return os_scheduler_schedule();
     }else {
@@ -83,9 +82,8 @@ os_err_t os_waitobject_wait(os_waitobject_t * object, os_thread_t *thread, os_ti
             os_lock_unlock(&lock);
             return OS_ERR_TIMEOUT;
         }
-        
-        OS_LIST_REMOVE(&thread->pend_node);
-        OS_LIST_INSERT_BEFORE(&object->wait_list, &thread->pend_node);
+
+        os_waitobject_push_back(object, thread);
         os_scheduler_delay_no_schedule(thread, wait_ticks);
         os_lock_unlock(&lock);
         
