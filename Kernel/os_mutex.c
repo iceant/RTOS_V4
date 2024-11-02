@@ -24,7 +24,7 @@ os_err_t os_mutex_lock(os_mutex_t* mutex, os_tick_t ticks){
                 /* 当前任务的优先级比较低，提升优先级 */
                 mutex->owner->current_priority = current_thread->current_priority;
             }
-            os_err_t wait_error = os_service_wait(&mutex->wait_object, os_thread_self(), ticks);
+            os_err_t wait_error = os_service_wait(&mutex->wait_object, current_thread, ticks);
             if(wait_error==OS_ERR_TIMEOUT){
                 return OS_ERR_TIMEOUT;
             }

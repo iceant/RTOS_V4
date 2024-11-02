@@ -20,27 +20,29 @@
 //extern void __enable_irq(void);
 //extern void __disable_fiq(void);
 //extern void __enable_fiq(void);
-//extern cpu_uint_t __ldrex(volatile void*);
+extern cpu_uint_t __ldrex(volatile void*);
 //extern void __nop(void);
 //extern cpu_uint_t __rbit(cpu_uint_t);
 //extern cpu_uint_t __rev(cpu_uint_t);
 //extern cpu_uint_t __ror(cpu_uint_t val, cpu_uint_t shift);
 //extern cpu_int_t __ssat(cpu_int_t val, cpu_uint_t sat);
 //extern void __sev(void);
-//extern cpu_int_t __strex(cpu_uint_t val, volatile void* ptr);
+extern cpu_int_t __strex(cpu_uint_t val, volatile void* ptr);
 //extern cpu_int_t __strt(cpu_uint_t val, const volatile void* ptr);
 //extern cpu_int_t __usat(cpu_uint_t val, cpu_uint_t sat);
 //extern void __wfe(void);
 //extern void __wfi(void);
 //extern void __breakpoint(int val);
 //extern void __schedule_barrier(void);
-//extern void __dmb(unsigned char);
+extern void __dmb(unsigned char);
 //extern void __isb(unsigned char);
 //extern void __dsb(unsigned char);
 
 
 /* -------------------------------------------------------------------------------------------------------------- */
 /*  */
+
+#define ATTR_NO_INSTRUMENT_FUNCTION __attribute__( ( no_instrument_function ) )
 
 #define cpu_svc(n) __asm{SVC n}
 
@@ -49,16 +51,33 @@
 //#define cpu_disable_irq __disable_irq
 //#define cpu_enable_irq  __enable_irq
 
-#define cpu_isb() __isb(0xf)
+//#define cpu_isb() __isb(0xf)
+//#define cpu_dsb() __dsb(0xf)
+//#define cpu_dmb() __dmb(0xf)
 
-#define cpu_dsb() __dsb(0xf)
+#define cpu_isb() cpu_sync_barrier_instruction()
+#define cpu_dsb() cpu_sync_barrier_data()
+#define cpu_dmb() cpu_sync_barrier_memory()
 
-#define cpu_dmb() __dmb(0xf)
 
 #define cpu_clz   __clz
 
 /* -------------------------------------------------------------------------------------------------------------- */
 /* FUNCTIONS */
+C_STATIC_FORCE_INLINE ATTR_NO_INSTRUMENT_FUNCTION void cpu_sync_barrier_memory( void )
+{
+    __asm { DMB 0x0F}
+}
+
+C_STATIC_FORCE_INLINE ATTR_NO_INSTRUMENT_FUNCTION void cpu_sync_barrier_data( void )
+{
+    __asm { DSB 0x0F}
+}
+
+C_STATIC_FORCE_INLINE ATTR_NO_INSTRUMENT_FUNCTION void cpu_sync_barrier_instruction( void )
+{
+    __asm { ISB 0x0F}
+}
 
 C_STATIC_FORCE_INLINE void cpu_disable_irq(void){
     __asm {
