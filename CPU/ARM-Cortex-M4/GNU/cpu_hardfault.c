@@ -4,7 +4,6 @@ __attribute__((naked)) void HardFault_Handler(void)
 {
 __asm volatile(
         ".global HardFault_Handler_C\n"
-        "PRESERVE8 \n"
         "   CPSID       I \n"
         "   TST LR,     #4 \n"
         "   ITE         EQ \n"

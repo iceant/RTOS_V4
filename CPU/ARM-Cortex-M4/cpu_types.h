@@ -13,12 +13,20 @@
 #include <stddef.h>
 #endif /*INCLUDED_STDDEF_H*/
 
+#ifndef INCLUDED_CPU_OPTIONS_H
+#include <cpu_options.h>
+#endif /*INCLUDED_CPU_OPTIONS_H*/
+
+
 /* -------------------------------------------------------------------------------------------------------------- */
 /*  */
-
+#ifndef CPU_SIZEOF_VOID_P
 #define CPU_SIZEOF_VOID_P   4
-#define CPU_BITS            32
+#endif
 
+#ifndef CPU_BITS
+#define CPU_BITS            32
+#endif
 
 /* -------------------------------------------------------------------------------------------------------------- */
 /* TYPES */

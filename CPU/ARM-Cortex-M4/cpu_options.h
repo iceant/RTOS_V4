@@ -25,4 +25,8 @@
     #define CPU_BITS (CPU_SIZEOF_VOID_P * 8)
 #endif
 
+#ifndef __FPU_PRESENT
+    #define __FPU_PRESENT
+#endif
+
 #endif /* INCLUDED_CPU_OPTIONS_H */

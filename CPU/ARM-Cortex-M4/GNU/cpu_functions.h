@@ -107,6 +107,9 @@ C_STATIC_FORCE_INLINE void cpu_reboot(void){
     while (1) { } // should be unreachable
 }
 
+C_STATIC_FORCE_INLINE void cpu_set_msp(cpu_uint_t msp){
+    __asm volatile("MSR msp, %0"::"r"(msp):"memory");
+}
 /* -------------------------------------------------------------------------------------------------------------- */
 /*  */
 

@@ -34,7 +34,7 @@ extern cpu_int_t __strex(cpu_uint_t val, volatile void* ptr);
 //extern void __wfi(void);
 //extern void __breakpoint(int val);
 //extern void __schedule_barrier(void);
-extern void __dmb(unsigned char);
+//extern void __dmb(unsigned char);
 //extern void __isb(unsigned char);
 //extern void __dsb(unsigned char);
 
