@@ -10,7 +10,11 @@ set(CMAKE_SIZE ${TOOLCHAIN_BIN_DIR}/${TOOLCHAIN}-size${TOOLCHAIN_EXT})
 # Prints the section sizes
 #---------------------------------------------------------------------------------------
 function(print_section_sizes TARGET)
-    add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_SIZE} ${TARGET})
+    set(ASM_FILE ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}.asm)
+    add_custom_command(TARGET ${TARGET} POST_BUILD
+            COMMAND ${CMAKE_SIZE} ${TARGET}
+            COMMAND ${CMAKE_OBJDUMP} --source --all-headers --demangle --file-headers --line-numbers --wide -D ${TARGET} > ${ASM_FILE}
+    )
 endfunction()
 
 #---------------------------------------------------------------------------------------
