@@ -22,7 +22,7 @@
 #define CPU_BIT_GET(x,p)        (((x)>>(p))&1)
 #define CPU_BIT_TOGGLE(x,p)     ((x)^(1<<(p)))
 
-#define CPU_BITS_IN(start, end)          ((CPU_UINT_MAX << (start)) & (CPU_UINT_MAX >> (CPU_BITS - (cpu_uint_t)(end))))
+#define CPU_BITS_IN(start, end)          ((CPU_UINT_MAX << (start)) & (CPU_UINT_MAX >> ((CPU_BITS-1) - (cpu_uint_t)(end))))
 #define CPU_BITS_GET(regval, start, end)       (((regval) & CPU_BITS_IN((start),(end))) >> (start))
 
 #endif /* INCLUDED_CPU_MACROS_H */
