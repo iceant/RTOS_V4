@@ -54,6 +54,9 @@
         #define OS_SCNu          SCNu8
         #define OS_SCNo          SCNo8
         #define OS_SCNx          SCNx8
+        #define OS_INT_MIN       INT8_MIN
+        #define OS_INT_MAX       INT8_MAX
+        #define OS_UINT_MAX      UINT8_MAX
     #elif (CPU_SIZEOF_VOID_P==2)
         typedef  int16_t         os_int_t;
         typedef uint16_t         os_uint_t;
@@ -71,6 +74,9 @@
         #define OS_SCNu          SCNu16
         #define OS_SCNo          SCNo16
         #define OS_SCNx          SCNx16
+        #define OS_INT_MIN       INT16_MIN
+        #define OS_INT_MAX       INT16_MAX
+        #define OS_UINT_MAX      UINT16_MAX
     #elif (CPU_SIZEOF_VOID_P==4)
         typedef  int32_t         os_int_t;
         typedef uint32_t         os_uint_t;
@@ -88,6 +94,9 @@
         #define OS_SCNu          SCNu32
         #define OS_SCNo          SCNo32
         #define OS_SCNx          SCNx32
+        #define OS_INT_MIN       INT32_MIN
+        #define OS_INT_MAX       INT32_MAX
+        #define OS_UINT_MAX      UINT32_MAX
     #elif (CPU_SIZEOF_VOID_P==8)
         typedef  int64_t         os_int_t;
         typedef uint64_t         os_uint_t;
@@ -105,6 +114,9 @@
         #define OS_SCNu          SCNu64
         #define OS_SCNo          SCNo64
         #define OS_SCNx          SCNx64
+        #define OS_INT_MIN       INT64_MIN
+        #define OS_INT_MAX       INT64_MAX
+        #define OS_UINT_MAX      UINT64_MAX
     #endif
 #endif
 

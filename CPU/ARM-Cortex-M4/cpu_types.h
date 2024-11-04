@@ -31,10 +31,10 @@
 /* -------------------------------------------------------------------------------------------------------------- */
 /* TYPES */
 
-typedef int32_t     cpu_int_t;
-typedef uint32_t    cpu_uint_t;
-typedef int32_t     cpu_intptr_t;
-typedef uint32_t    cpu_uintptr_t;
+typedef int32_t         cpu_int_t;
+typedef uint32_t        cpu_uint_t;
+typedef int32_t         cpu_intptr_t;
+typedef uint32_t        cpu_uintptr_t;
 
 #define CPU_UINT_MAX    UINT32_MAX
 #define CPU_INT_MAX     INT32_MAX
