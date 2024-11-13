@@ -94,3 +94,20 @@ cpu_int_t cpu_stack_switch(void** from_stack_p, void** to_stack_p, cpu_stack_swi
     return CPU_STACK_OK;
 }
 
+cpu_int_t cpu_stack_check(void* stack_addr, cpu_uint_t stack_size_nBytes, void* sp){
+    cpu_uintptr_t stack_bottom = ((cpu_uintptr_t)stack_addr) + stack_size_nBytes;
+    cpu_uintptr_t uint_sp = (cpu_uintptr_t)sp;
+    cpu_uintptr_t stack_limit = ((cpu_uintptr_t)stack_addr) + CPU_STACK_MINIMAL_SIZE;
+    
+    if(uint_sp>=stack_limit && uint_sp <=stack_bottom){
+        return CPU_STACK_OK;
+    }
+    
+    return CPU_STACK_OVERFLOW;
+}
+
+cpu_uint_t cpu_stack_remain(void* stack_addr, cpu_uint_t stack_size_nBytes, void* sp){
+    cpu_uintptr_t stack_bottom = (cpu_uintptr_t)stack_addr;
+    cpu_uintptr_t uint_sp = (cpu_uintptr_t)sp;
+    return (uint_sp - stack_bottom);
+}

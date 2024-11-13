@@ -6,7 +6,7 @@
 #include <os_timewheel.h>
 #include <cpu.h>
 #include <os_service.h>
-#include <stdio.h>
+#include <os_printf.h>
 /* -------------------------------------------------------------------------------------------------------------- */
 /* EXTERNAL  */
 
@@ -184,6 +184,25 @@ os_err_t os_scheduler_schedule(void){
         }
     }
     
+    #if (OS_ENABLE_STACK_OVERFLOW_CHECK==1)
+    cpu_int_t overflow_check = cpu_stack_check(os_scheduler__highest_thread_p->stack_address
+            , os_scheduler__highest_thread_p->stack_size
+            , os_scheduler__highest_thread_p->sp);
+    
+    if(overflow_check==CPU_STACK_OVERFLOW){
+        cpu_uint_t remain_size = cpu_stack_remain(os_scheduler__highest_thread_p->stack_address
+                , os_scheduler__highest_thread_p->stack_size
+                , os_scheduler__highest_thread_p->sp);
+        os_printf("[OS] ERR - Thread %s SP %p remain %d(min:%d) bytes to OVERFLOW in Stack[top:%p, bottom:%p]\r\n"
+                , os_scheduler__highest_thread_p->name
+                , os_scheduler__highest_thread_p->sp
+                , remain_size
+                , CPU_STACK_MIN_SIZE
+                , os_scheduler__highest_thread_p->stack_address + os_scheduler__highest_thread_p->stack_size
+                , os_scheduler__highest_thread_p->stack_address
+            );
+    }
+    #endif
     /*Unlock, IMPORTANT!!!*/
     OS_SCHEDULER_LOCK_UNLOCK();
     

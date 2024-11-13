@@ -38,11 +38,19 @@
 #endif
 
 #ifndef OS_THREAD_IDLE_STACK_SIZE
-    #define OS_THREAD_IDLE_STACK_SIZE 512
+    #define OS_THREAD_IDLE_STACK_SIZE 256
 #endif
 
 #ifndef OS_THREAD_IDLE_TICKS
     #define OS_THREAD_IDLE_TICKS 5
+#endif
+
+#ifndef OS_ENABLE_STACK_OVERFLOW_CHECK
+    #define OS_ENABLE_STACK_OVERFLOW_CHECK 1
+#endif
+
+#ifndef OS_PRINTF_BUFFER_SIZE
+    #define OS_PRINTF_BUFFER_SIZE 1024
 #endif
 
 #endif /* INCLUDED_OS_DEFINITIONS_H */
